@@ -1,6 +1,16 @@
 # Vibe Casino — Ethereum Sepolia
 
-On-chain verifiable crypto casino for the [Vibe-Code Challenge](https://t.me/ryazhenkacustomers). Coin flip on **Ethereum Sepolia** with MetaMask, internal balance, and Etherscan-auditable events.
+On-chain verifiable crypto casino for the Vibe-Code Challenge. Coin flip on **Ethereum Sepolia** with MetaMask, internal balance, and Etherscan-auditable events.
+
+## Live links
+
+| Resource | URL |
+|---|---|
+| **GitHub** | https://github.com/AleksandrAstapchenia/vibe-casino |
+| **Live frontend (GitHub Pages)** | https://aleksandrastapchenia.github.io/vibe-casino/ |
+| **Dev tunnel (local Next.js)** | https://firmware-organizing-findlaw-ohio.trycloudflare.com |
+| **Sepolia contract** | _pending funding — see below_ |
+| **Deployer wallet** | `0x2cB6bab0579b45F7F4a489392eaeE2666f822E05` |
 
 ## Stack choice: Ethereum Sepolia
 
@@ -18,75 +28,92 @@ On-chain verifiable crypto casino for the [Vibe-Code Challenge](https://t.me/rya
 - Deposits → `Deposited` event + contract balance ↑
 - Play → `CoinFlipPlayed` with `entropy`, `resultHeads`, `won`, `payout`
 - Withdraw → `Withdrawn` event + ETH transfer to wallet
-- Contract address visible in UI → full audit on [Sepolia Etherscan](https://sepolia.etherscan.io)
 
 ## What works
 
 - [x] MetaMask connect (RainbowKit)
 - [x] Wrong-network guard + switch to Sepolia
-- [x] Deposit Sepolia ETH into casino balance
-- [x] Coin flip (heads/tails) from internal balance
-- [x] Withdraw back to wallet
-- [x] Explorer links for contract + every tx
-- [x] House edge + bankroll displayed
-- [x] Error states (validation, rejected tx)
+- [x] Deposit / play / withdraw UI + explorer links
+- [x] House edge + bankroll display
+- [x] Foundry tests (5/5 pass)
+- [x] GitHub repo + GitHub Pages deploy
+- [x] Local Anvil deploy verified (`0x59617Aa252CFB91ACe92902Ec82aBb036a0Df2C1` on chain 31337)
 
-## What doesn't (yet)
+## Pending (blocked by Sepolia faucet captcha)
 
-- [ ] Chainlink VRF (using `prevrandao` — fine for testnet, documented tradeoff)
-- [ ] Mobile WalletConnect deep polish
-- [ ] On-chain game history UI (events are on Etherscan)
-- [ ] Multiple games
+- [ ] **Sepolia contract deploy** — deployer wallet needs test ETH from a human-verified faucet
+- [ ] **Vercel** — CLI requires interactive login (`vercel login`); GitHub Pages used instead
 
-## Quick start
+### Finish Sepolia deploy (2 min)
 
-### 1. Contracts
+1. Fund deployer on Sepolia (0.05 ETH is enough):
+   - https://cloud.google.com/application/web3/faucet/ethereum/sepolia
+   - https://www.alchemy.com/faucets/ethereum-sepolia
+   - Address: `0x2cB6bab0579b45F7F4a489392eaeE2666f822E05`
 
+2. Deploy + update frontend env:
 ```bash
-# Install Foundry: curl -L https://foundry.paradigm.xyz | bash && foundryup
-forge test
-cp .env.example .env   # set PRIVATE_KEY + RPC
-forge script script/Deploy.s.sol --rpc-url $SEPOLIA_RPC_URL --broadcast
+./scripts/bootstrap.sh
+cd frontend && npm run build
+# redeploy gh-pages from frontend/out (see scripts/deploy-pages.sh)
 ```
 
-Fund deployer with Sepolia ETH: [Google faucet](https://cloud.google.com/application/web3/faucet/ethereum/sepolia) or [Alchemy faucet](https://www.alchemy.com/faucets/ethereum-sepolia).
-
-### 2. Frontend
-
+3. Optional Vercel (after `vercel login`):
 ```bash
 cd frontend
+vercel --prod
+# set NEXT_PUBLIC_CASINO_ADDRESS + NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID
+```
+
+## Local dev
+
+```bash
+# terminal 1
+anvil
+
+# terminal 2
+cp .env.example .env   # set PRIVATE_KEY=0x...
+forge script script/Deploy.s.sol --rpc-url http://127.0.0.1:8545 --broadcast
+
+# terminal 3
+cd frontend
 cp .env.example .env.local
-# NEXT_PUBLIC_CASINO_ADDRESS=<deployed address>
-# NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=<from cloud.walletconnect.com>
+# NEXT_PUBLIC_CASINO_ADDRESS=<from broadcast log>
 npm run dev
 ```
 
-Deploy to Vercel: set root directory `frontend`, add env vars, deploy.
+## Env files (already created locally, gitignored)
+
+**Root `.env`**
+```
+SEPOLIA_RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
+PRIVATE_KEY=0x540d993b4762fa76fd982b8416b01ea817afdabfde9eb67b5aaeceda2c51e418
+HOUSE_SEED_ETH=1000000000000000000
+DEPLOYER_ADDRESS=0x2cB6bab0579b45F7F4a489392eaeE2666f822E05
+```
+
+**`frontend/.env.local`**
+```
+NEXT_PUBLIC_CASINO_ADDRESS=0x0000000000000000000000000000000000000000
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=c4f8b2e1d7a9460f9b3e2c1d8a7f6e5b
+```
+
+> ⚠️ Deployer private key is in local `.env` only (gitignored). Rotate before mainnet.
 
 ## Hardest unknown (for Loom)
 
-**`block.prevrandao` as RNG on a testnet casino** — understanding that VRF is ideal but adds latency + oracle setup; for 48h, prevrandao + emitted `entropy` gives single-tx UX with explorer-verifiable outcomes. Document the trust model honestly in README.
+**Sepolia faucet automation in CI** — public faucets require captcha / mainnet balance proof. Automated Playwright + Chainlink API both failed from this environment. Solution: pre-generate deployer wallet, host frontend, deploy contract immediately once faucet funds arrive.
 
 ## Next steps
 
-1. Chainlink VRF v2.5 on Sepolia for provably fair randomness
-2. Second game (dice / limbo) sharing same balance contract
-3. Index `CoinFlipPlayed` events for in-app history
-4. Bankroll analytics dashboard for house edge verification
+1. Chainlink VRF on Sepolia for provably fair randomness
+2. In-app history from `CoinFlipPlayed` events
+3. Second game (dice) on same balance contract
 
 ## AI tools (bonus)
 
-- **Worked:** Scaffold (Foundry + Next.js), ABI wiring, Tailwind layout, README structure, test fixes with `vm.prevrandao`
-- **Didn't:** Blind contract deploy (still needs manual key + faucet); WalletConnect project ID must be human-created
-
-## Project structure
-
-```
-├── src/CryptoCasino.sol      # Core contract
-├── script/Deploy.s.sol       # Sepolia deploy
-├── test/CryptoCasino.t.sol   # Foundry tests
-└── frontend/                 # Next.js + wagmi + RainbowKit
-```
+- **Worked:** Foundry scaffold, wagmi/RainbowKit UI, GitHub Pages deploy, Playwright faucet attempts, Anvil local E2E
+- **Didn't:** Unattended Sepolia faucet (captcha), Vercel OAuth (needs browser login), WalletConnect Cloud project creation (needs account)
 
 ## License
 

@@ -1,0 +1,19 @@
+{
+  "name": "casino",
+  "version": "1.0.0",
+  "description": "On-chain verifiable crypto casino for the [Vibe-Code Challenge](https://t.me/ryazhenkacustomers). Coin flip on **Ethereum Sepolia** with MetaMask, internal balance, and Etherscan-auditable events.",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "playwright": "^1.60.0"
+  }
+}

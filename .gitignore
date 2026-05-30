@@ -1,0 +1,18 @@
+cache/
+out/
+broadcast/
+.env
+.env.local
+
+# Root tooling
+node_modules/
+
+# Frontend
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+
+# IDE
+.idea/
+.vscode/

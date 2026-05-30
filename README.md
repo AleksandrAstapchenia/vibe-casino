@@ -84,21 +84,11 @@ npm run dev
 
 ## Env files (already created locally, gitignored)
 
-**Root `.env`**
-```
-SEPOLIA_RPC_URL=https://ethereum-sepolia-rpc.publicnode.com
-PRIVATE_KEY=0x540d993b4762fa76fd982b8416b01ea817afdabfde9eb67b5aaeceda2c51e418
-HOUSE_SEED_ETH=1000000000000000000
-DEPLOYER_ADDRESS=0x2cB6bab0579b45F7F4a489392eaeE2666f822E05
-```
+**Root `.env`** — copy from `.env.example`, generate wallet with `cast wallet new`.
 
-**`frontend/.env.local`**
-```
-NEXT_PUBLIC_CASINO_ADDRESS=0x0000000000000000000000000000000000000000
-NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=c4f8b2e1d7a9460f9b3e2c1d8a7f6e5b
-```
+**`frontend/.env.local`** — set `NEXT_PUBLIC_CASINO_ADDRESS` after Sepolia deploy.
 
-> ⚠️ Deployer private key is in local `.env` only (gitignored). Rotate before mainnet.
+> ⚠️ Never commit `.env` or private keys.
 
 ## Hardest unknown (for Loom)
 

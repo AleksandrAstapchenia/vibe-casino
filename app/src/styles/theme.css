@@ -1,0 +1,260 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Typography */
+  --font-size: 16px;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --font-weight-bold: 800;
+
+  /* THE ZONE - DEPTH DIVER - Hyper-Constrained Color System */
+
+  /* The Void - Pure black background */
+  --background: #000000;
+  --background-secondary: #0a0a0a;
+  --foreground: #ffffff;
+
+  /* SAFE - Cyan/Electric Blue (oxygen, energy, life) */
+  --safe: #00D9FF;
+  --safe-foreground: #000000;
+  --safe-glow: rgba(0, 217, 255, 0.6);
+  --safe-dim: rgba(0, 217, 255, 0.2);
+
+  /* MULTIPLIER - Hot Magenta (excitement, reward, dopamine) */
+  --multiplier: #FF0080;
+  --multiplier-foreground: #ffffff;
+  --multiplier-glow: rgba(255, 0, 128, 0.8);
+  --multiplier-dim: rgba(255, 0, 128, 0.2);
+
+  /* DEATH - Deep Red (danger, void, pressure) */
+  --death: #8B0000;
+  --death-foreground: #ffffff;
+  --death-glow: rgba(139, 0, 0, 0.8);
+  --death-bright: #FF0000;
+
+  /* UI CHROME - Invisible scaffolding */
+  --ui-chrome: #1a1a1a;
+  --ui-border: rgba(255, 255, 255, 0.05);
+  --ui-text: rgba(255, 255, 255, 0.6);
+
+  /* Standard tokens mapped to new system */
+  --primary: var(--safe);
+  --primary-foreground: var(--safe-foreground);
+  --secondary: var(--ui-chrome);
+  --secondary-foreground: var(--ui-text);
+  --muted: var(--ui-chrome);
+  --muted-foreground: var(--ui-text);
+  --accent: var(--multiplier);
+  --accent-foreground: var(--multiplier-foreground);
+  --destructive: var(--death);
+  --destructive-foreground: var(--death-foreground);
+  --card: var(--ui-chrome);
+  --card-foreground: var(--foreground);
+  --popover: var(--ui-chrome);
+  --popover-foreground: var(--foreground);
+  --border: var(--ui-border);
+  --input: transparent;
+  --input-background: var(--ui-chrome);
+  --ring: var(--safe-glow);
+  --radius: 0;
+}
+
+@theme inline {
+  /* Base colors */
+  --color-background: var(--background);
+  --color-background-secondary: var(--background-secondary);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-card-border: var(--card-border);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  /* The Zone semantic colors */
+  --color-safe: var(--safe);
+  --color-safe-foreground: var(--safe-foreground);
+  --color-safe-glow: var(--safe-glow);
+  --color-multiplier: var(--multiplier);
+  --color-multiplier-foreground: var(--multiplier-foreground);
+  --color-multiplier-glow: var(--multiplier-glow);
+  --color-death: var(--death);
+  --color-death-foreground: var(--death-foreground);
+  --color-death-glow: var(--death-glow);
+  --color-risk: var(--risk);
+  --color-risk-foreground: var(--risk-foreground);
+  --color-risk-glow: var(--risk-glow);
+
+  /* Standard UI tokens */
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    font-size: var(--font-size);
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    position: relative;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+  }
+
+  /* Void background with subtle particle effect */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(0, 217, 255, 0.03), transparent 40%),
+      radial-gradient(circle at 20% 80%, rgba(255, 0, 128, 0.02), transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+    animation: pulse 8s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.5; }
+    50% { opacity: 1; }
+  }
+
+  /* Display font for multiplier */
+  .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.05em;
+  }
+
+  /* Mono font for precise numbers */
+  .font-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Custom SOL stepper — hide native number spinners (inconsistent on mobile) */
+  .sol-amount-input::-webkit-outer-spin-button,
+  .sol-amount-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .sol-amount-input {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  /* Typography */
+  h1 {
+    font-family: var(--font-display);
+    font-weight: var(--font-weight-bold);
+    line-height: 0.9;
+  }
+
+  /* Glow effects */
+  .glow-safe {
+    box-shadow: 0 0 40px var(--safe-glow), 0 0 80px var(--safe-dim);
+  }
+
+  .glow-multiplier {
+    box-shadow: 0 0 60px var(--multiplier-glow), 0 0 120px var(--multiplier-dim);
+    animation: multiplier-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes multiplier-pulse {
+    0%, 100% {
+      filter: brightness(1);
+      transform: scale(1);
+    }
+    50% {
+      filter: brightness(1.2);
+      transform: scale(1.02);
+    }
+  }
+
+  .glow-death {
+    box-shadow: 0 0 80px var(--death-glow);
+    animation: death-pulse 0.3s ease-in-out;
+  }
+
+  @keyframes death-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* Path visualizations */
+  .path-safe {
+    stroke: var(--safe);
+    fill: var(--safe-dim);
+    filter: drop-shadow(0 0 8px var(--safe-glow));
+  }
+
+  .path-unknown {
+    stroke: var(--ui-text);
+    fill: transparent;
+    stroke-dasharray: 4 4;
+    opacity: 0.3;
+  }
+
+  .path-death {
+    stroke: var(--death-bright);
+    fill: var(--death);
+    filter: drop-shadow(0 0 12px var(--death-glow));
+  }
+
+  /* Disable text selection for game elements */
+  .no-select {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Smooth animations */
+  @media (prefers-reduced-motion: no-preference) {
+    * {
+      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
